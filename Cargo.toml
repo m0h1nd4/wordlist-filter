@@ -1,0 +1,79 @@
+[package]
+name = "wordlist-filter"
+version = "1.0.0"
+edition = "2021"
+authors = ["m0h1nd4"]
+description = "High-performance wordlist filter for penetration testing - filter by length, regex patterns, with deduplication"
+license = "Apache-2.0"
+repository = "https://github.com/m0h1nd4/wordlist-filter"
+readme = "README.md"
+keywords = ["wordlist", "pentest", "security", "filter", "deduplicate"]
+categories = ["command-line-utilities", "text-processing"]
+
+[dependencies]
+# CLI
+clap = { version = "4.4", features = ["derive", "color"] }
+
+# Async & Parallel Processing
+rayon = "1.8"
+crossbeam-channel = "0.5"
+num_cpus = "1.16"
+
+# Memory-mapped files for large file handling
+memmap2 = "0.9"
+
+# Progress bar
+indicatif = { version = "0.17", features = ["rayon"] }
+
+# Colored output
+colored = "2.1"
+
+# Regex
+regex = "1.10"
+
+# Encoding detection
+chardetng = "0.1"
+encoding_rs = "0.8"
+encoding_rs_io = "0.1"
+
+# Hashing for deduplication
+ahash = "0.8"
+hashbrown = "0.14"
+
+# Memory-efficient deduplication for huge files
+rocksdb = { version = "0.22", optional = true }
+
+# File walking
+walkdir = "2.4"
+ignore = "0.4"
+
+# Error handling
+anyhow = "1.0"
+thiserror = "1.0"
+
+# Byte handling
+bstr = "1.9"
+memchr = "2.7"
+
+# Human-readable sizes
+bytesize = "1.3"
+
+# Logging
+log = "0.4"
+env_logger = "0.11"
+
+[features]
+default = []
+disk-dedup = ["rocksdb"]
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
+
+[profile.release-fast]
+inherits = "release"
+lto = "thin"
+codegen-units = 4
